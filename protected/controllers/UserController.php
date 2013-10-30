@@ -198,7 +198,7 @@ class UserController extends CController{
 		$date = $_POST['date'];
 		//$user_pk ='1';
 		//$project_pk ='1';
-		//$date = '2013-08';
+		//$date = '2013-10';
 		$model = new UserModel();
 		$url = $model->getPDF($user_pk,$project_pk,$date);
 		if($url !== 0){
