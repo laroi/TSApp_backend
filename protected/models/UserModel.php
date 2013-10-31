@@ -328,6 +328,27 @@ class UserModel extends CModel {
 		return 1;
 	}
 	
+	public function updateAllProjects($added,$deleted){
+	
+		if(sizeof($deleted) !==0){
+			foreach ($deleted as $deleted_project){
+				$sqldelete = "DELETE FROM projects WHERE project_pk =".$deleted_project;
+				$command = $this->connection->createCommand($sqldelete);
+				$command->execute();
+				//var_dump($sqldelete);
+			}
+		}
+		if(sizeof($added) !==0){
+			foreach ($added as $added_project){
+				$sqldelete = "INSERT INTO projects (name) VALUES ('".$added_project."')";
+				$command = $this->connection->createCommand($sqldelete);
+				//var_dump($sqldelete);
+				$command->execute();
+			}
+		}
+		return 1;
+	}
+	
 	//LP
 	public function deleteProject($project_id,$user_id){
 		$sql = "DELETE FROM `project_user_mapping` WHERE project_fk=".$project_id." AND user_fk =".$user_id;

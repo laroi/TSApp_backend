@@ -4,7 +4,9 @@ $(document).ready(function(){
 	var storeProject = function(callback){
 		var projects=[];
 		$('.ex_proj_ind').each(function(){
-			projects.push($(this).find('.proj_name').text().trim());
+			//projects.push({id:$(this).find('.proj_name').attr('id').trim(), name:$(this).find('.proj_name').text().trim()});
+			projects.push($(this).find('.proj_name').attr('id').trim()
+			);
 		});
 		if(typeof(callback) === 'function'){
 			callback(projects);
@@ -19,9 +21,10 @@ $(document).ready(function(){
 			deletedArray = inStoredProjects,
 			$('.exist').each(function(){
 				console.log(deletedArray.indexOf($(this).text().trim()));
-				/*if(deletedArray.indexOf($(this).text().trim()) !== -1){
-					deletedArray.pop(deletedArray.indexOf($(this).text().trim());
-				}*/
+				if(deletedArray.indexOf($(this).attr('id').toString().trim()) !== -1){
+					var index = deletedArray.indexOf($(this).attr('id').toString().trim())
+					deletedArray.splice(deletedArray.indexOf($(this).attr('id').toString().trim()),1);
+				}
 			});
 		}
 		$('.new').each(function(){
@@ -32,7 +35,7 @@ $(document).ready(function(){
 		}
 	}
 	storeProject(function(_storedProjects){
-		storedProjects = _storedProjects;
+		var storedProjects = _storedProjects;
 		$('.btn_add_project').click(function(){
 			if($('.project_name').val()!=''){
 				var html = ''; 
@@ -56,6 +59,13 @@ $(document).ready(function(){
 				checkChange(storedProjects,function(_changedProjects){
 					console.log("Deleted Projects =>",_changedProjects.deleted);
 					console.log("Added Projects =>",_changedProjects.added);
+					$.post(url,{added:_changedProjects.added.join(","),deleted:_changedProjects.deleted.join(",")},function(data){
+						if(data.result>0){
+							//console.log(data);
+							location.reload();
+							//window.location="<?php echo Yii::app()->baseUrl?>/index.php/subscriber/subscriberIdeadetail/ideaId/<?php echo $details['idea_id']?>";
+						}
+					},"json");
 				});
 				
 				

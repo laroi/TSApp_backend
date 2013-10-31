@@ -3,6 +3,10 @@
 class UserController extends CController{
 	private $all_projects;
 	public $layout='//layouts/layout';
+	/*************
+	 * API used for logging in
+	 * @params : mac_id
+	 *************/
 	public function actionLogin(){
 		$mac_id = $_POST['mac'] ;
 		$model = new UserModel();
@@ -23,6 +27,10 @@ class UserController extends CController{
 		echo CJSON::encode($result);
 	}
 	
+	/*************
+	 * API used for Joining
+	* @params : first_name,last_name,mac
+	*************/
 	public function actionJoin(){
 		$model = new UserModel();
 		$first =  $_POST['first_name'] ;
@@ -56,6 +64,10 @@ class UserController extends CController{
 		
 	}
 	
+	/*************
+	 * API used for Update Particular user project
+	* @params : user_pk,array of added projects, array of deleted projects
+	*************/
 	public function actionUpdateMyProjects(){
 		$model = new UserModel();
 		$user_fk = $_POST['user_pk'];
@@ -69,19 +81,26 @@ class UserController extends CController{
 		echo json_encode($result);
 		//echo json_encode($deleted_project);
 	}
-	
+	/*************
+	 * API used for adding projects. To be used by admin only
+	* @params : array of added projects, array of deleted projects 
+	*************/
 	public function actionUpdateAllProjects(){
 		$model = new UserModel();
 		$added_project = $_POST['added'] !== "" ? explode(",",$_POST['added']) : null;
 		$deleted_project = $_POST['deleted']!== "" ? explode(",",$_POST['deleted']) :null;
-		$ret_val = $model->updateMyProjects($user_fk,$added_project,$deleted_project);
+		$ret_val = $model->updateAllProjects($added_project,$deleted_project);
 		$result = array(
-				Constants::API_RESULT_SUCESS,
+				'result'=>Constants::API_RESULT_SUCESS,
 					
 		);
 		echo json_encode($result);
 		//echo json_encode($deleted_project);
 	}
+	/*************
+	 * API used for adding and editing time sheet entry
+	* @params : entryid (only for editing), project id, hours of working, description,user id,isEdit
+	*************/
 	public function actionAddTimeSheetEntry(){
 		$model = new UserModel();
 		//hard coded values
@@ -119,6 +138,10 @@ class UserController extends CController{
 		
 	}
 	
+	/*************
+	 * API used for get projects per user
+	* @params : userid
+	*************/
 	public function actionGetProjects(){
 		$user_pk = $_POST['user_pk'];
 		$model = new UserModel();
