@@ -104,7 +104,8 @@ class UserController extends CController{
 	public function actionAddTimeSheetEntry(){
 		$model = new UserModel();
 		//hard coded values
-		$date =date("Y-m-d"); //"2013-8-25";
+		//$date =date("Y-m-d"); //"2013-8-25";
+		$date = $_POST['date'];
 		$entry_id = isset($_POST['entry_pk'])?$_POST['entry_pk']:"";
 		$project = $_POST['project_fk']; //"test project";
 		$hours = $_POST['hours'];//5;
