@@ -58,23 +58,22 @@ class UserModel extends CModel {
 		$rows=$command->queryAll();
 		//$date = mktime(date_parse_from_format('d/M/Y:H:i:s', $rows[0]->date)); //The get's the first of March 2009
 		
-		//var_dump($new_date);
+		//var_dump($rows);
 		//var_dump(mktime($date));
-		
 		$ret = $this->createPDF($rows);
 		return $ret;
 	}
 	
-	function checkEntryExists($array, $key, $val) {
-		foreach ($array as $item){
-			//var_dump(substr($item->$key, 0, -9));
-			//var_dump (substr($item->$key, 0, -9),$val,substr($item->$key, 0, -9) === $val);
-		if (isset($item->$key) && substr($item->$key, 0, -9) == $val){
-			return $item;
-		}else{
-		return "";
+	function checkEntryExists($array, $iteration, $key, $val) {
+		//foreach ($array as $item){
+		//isset($array[$iteration]);
+		if(isset($array[$iteration])){
+			return $array[$iteration];
 		}
+		else{
+			return "";
 		}
+		//}
 	}
 	
 	public function createPDF($data){
@@ -177,8 +176,11 @@ class UserModel extends CModel {
 			$month=date("m",strtotime($data[0]->date));
 			$year=date("Y",strtotime($data[0]->date));
 			$new_date = mktime(0,0,0,$month,1,$year);
+			
 			for($n=1;$n <= date('t',$new_date);$n++){
-				$value = $this->checkEntryExists($data,'date',$year."-".$month."-".$n);
+				(int)$day = (strlen($n+1)<2) ? "0".$n : $n;
+				//if(isset($data[$n]->date)) {var_dump($data[$n]->date);}
+				$value = $this->checkEntryExists($data,$n,'date',$year."-".$month."-".$day);
 				if($value!==""){
 					$sheet->setCellValue('A'.$starting_cell_num, $n);
 					$sheet->setCellValue('B'.$starting_cell_num, substr($value->date, 0, -8));
@@ -278,6 +280,7 @@ class UserModel extends CModel {
 		$command=$this->connection->createCommand($sql);
 		$command->setFetchMode(PDO::FETCH_OBJ);
 		$rows=$command->queryRow();
+		//var_dump($sql);
 		return $rows;
 	}
 	//LP
